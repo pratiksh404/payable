@@ -1,0 +1,56 @@
+{
+    "name": "pratiksh/payable",
+    "description": "Simple Payable Solution",
+    "keywords": [
+        "pratiksh404",
+        "Payable"
+    ],
+    "homepage": "https://github.com/adminetic/Payable",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Pratik Shrestha",
+            "email": "pratikdai404@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pratiksh\\Payable\\": "src"
+        },
+        "files": [
+            "src/Helpers/payable.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Pratiksh\\Payable\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Pratiksh\\Payable\\Providers\\PayableServiceProvider"
+            ],
+            "aliases": {
+                "Payable": "Pratiksh\\Payable\\Facades\\Payable"
+            }
+        }
+    }
+}

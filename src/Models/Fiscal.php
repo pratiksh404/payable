@@ -2,12 +2,11 @@
 
 namespace Pratiksh\Payable\Models;
 
-use Pratiksh\Payable\Models\Payment;
 use Illuminate\Database\Eloquent\Model;
 
 class Fiscal extends Model
 {
-    protected $fillable = ['year','start_date','end_date'];
+    protected $fillable = ['year', 'start_date', 'end_date'];
 
     public function __construct()
     {
@@ -15,7 +14,7 @@ class Fiscal extends Model
         $this->table = config(
             'payable.table_prefix',
             'payable_'
-        ) . 'fiscals';
+        ).'fiscals';
     }
 
     // Relationships

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create(config('payable.table_prefix', 'payable_') . 'fiscals', function (Blueprint $table) {
+        Schema::create(config('payable.table_prefix', 'payable_').'fiscals', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('year');
             $table->dateTime('start_date');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('payable.table_prefix', 'payable_') . 'fiscals');
+        Schema::dropIfExists(config('payable.table_prefix', 'payable_').'fiscals');
     }
 };

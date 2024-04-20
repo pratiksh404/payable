@@ -2,25 +2,21 @@
 
 namespace Pratiksh\Payable\Models;
 
-use Illuminate\Support\Str;
-use Pratiksh\Payable\Models\Fiscal;
 use Illuminate\Database\Eloquent\Model;
-use Pratiksh\Payable\Models\PaymentHistory;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Str;
 use Pratiksh\Payable\Facades\Payable;
 
 class Payment extends Model
 {
-    protected $fillable = ['amount','data'];
+    protected $fillable = ['amount', 'data'];
 
     protected $keyType = 'string';
-
- 
 
     public $incrementing = false;
 
     protected $casts = [
-        'data' => 'array'
+        'data' => 'array',
     ];
 
     public static function boot()
@@ -37,24 +33,32 @@ class Payment extends Model
     public function __construct()
     {
         parent::__construct();
-        $this->table = config('payable.table_prefix', 'payable_') . 'payments';
+        $this->table = config('payable.table_prefix', 'payable_').'payments';
     }
-
 
     // Relationships
-    public function paymentable(): MorphTo{
+    public function paymentable(): MorphTo
+    {
         return $this->morphTo();
     }
-    public function fiscal(){
+
+    public function fiscal()
+    {
         return $this->belongsTo(Fiscal::class);
     }
-    public function histories(){
+
+    public function histories()
+    {
         return $this->hasMany(PaymentHistory::class);
     }
-    public function paymentBy(){
+
+    public function paymentBy()
+    {
         return $this->histories->latest()->first();
     }
-    public function verifiedBy(){
+
+    public function verifiedBy()
+    {
         return $this->histories->latest()->first();
     }
 }

@@ -1,6 +1,6 @@
 {
     "name": "pratiksh/payable",
-    "description": "Simple Payable Solution",
+    "description": "Storing payment made simple.",
     "keywords": [
         "pratiksh404",
         "Payable"
@@ -19,6 +19,7 @@
         "php": "^7.4|^8.0"
     },
     "require-dev": {
+        "laravel/pint": "^1.15",
         "orchestra/testbench": "^6.0",
         "phpunit/phpunit": "^9.0"
     },

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create(config('payable.table_prefix','payable_').'payments', function (Blueprint $table) {
+        Schema::create(config('payable.table_prefix', 'payable_').'payments', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('receipt_no')->unique();
             $table->unsignedBigInteger('fiscal_id');
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Foreign
-            $table->foreign('fiscal_id')->references('id')->on(config('payable.table_prefix', 'payable_') . 'fiscals')->onDelete('cascade');
+            $table->foreign('fiscal_id')->references('id')->on(config('payable.table_prefix', 'payable_').'fiscals')->onDelete('cascade');
         });
     }
 
@@ -37,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('payable.table_prefix', 'payable_') . 'payments');
+        Schema::dropIfExists(config('payable.table_prefix', 'payable_').'payments');
     }
 };

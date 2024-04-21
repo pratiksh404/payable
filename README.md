@@ -1,24 +1,62 @@
-# Very short description of the package
+# Laravel Payable
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/adminetic/payment.svg?style=flat-square)](https://packagist.org/packages/adminetic/payment)
-[![Total Downloads](https://img.shields.io/packagist/dt/adminetic/payment.svg?style=flat-square)](https://packagist.org/packages/adminetic/payment)
-![GitHub Actions](https://github.com/adminetic/payment/actions/workflows/main.yml/badge.svg)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/pratiksh/payable.svg?style=flat-square)](https://packagist.org/packages/pratiksh/payable)
+[![Stars](https://img.shields.io/github/stars/pratiksh404/payable)](https://github.com/pratiksh404/payable/stargazers) [![Downloads](https://img.shields.io/packagist/dt/pratiksh/payable.svg?style=flat-square)](https://packagist.org/packages/pratiksh/payable) [![StyleCI](https://github.styleci.io/repos/372560942/shield?branch=main)](https://github.styleci.io/repos/372560942?branch=main) [![Build Status](https://scrutinizer-ci.com/g/pratiksh404/payable/badges/build.png?b=main)](https://scrutinizer-ci.com/g/pratiksh404/payable/build-status/main) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/pratiksh404/payable/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/pratiksh404/payable/?branch=main) [![CodeFactor](https://www.codefactor.io/repository/github/pratiksh404/payable/badge)](https://www.codefactor.io/repository/github/pratiksh404/payable) [![License](https://img.shields.io/github/license/pratiksh404/payable)](//packagist.org/packages/pratiksh/payable)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+Registering payment made simple
+
+For detailed documentation visit [payable Documentation](https://pratikdai404.gitbook.io/payable/)
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require adminetic/payment
+composer require pratiksh/payable
 ```
 
-## Usage
+## Publish Migrations
+Packages Contains 3 table
+ - fiscals
+ - payments
+ - payment_histories
 
-```php
-// Usage description here
+```sh
+php artisan vendor:publish --tag=payable-migrations
 ```
+
+## Publish Config file
+
+Install payable
+
+```sh
+php artisan vendor:publish --tag=payable-config
+```
+
+Migrate Database
+
+```sh
+php artisan migrate
+```
+
+
+## Setup
+Payment is `polymorphic`, hence with the use of trait `HasPayable` can be used with any model.
+```
+use Pratiksh\Payable\Traits\HasPayable;
+
+class Product extends Model
+{
+    use  HasPayable;
+}
+```
+
+## Usages
+```
+$product = Product::first();
+$product->pay(100)
+```
+
 
 ### Testing
 
@@ -40,8 +78,8 @@ If you discover any security related issues, please email pratikdai404@gmail.com
 
 ## Credits
 
--   [Pratik Shrestha](https://github.com/adminetic)
--   [All Contributors](../../contributors)
+- [Pratik Shrestha](https://github.com/pratiksh)
+- [All Contributors](../../contributors)
 
 ## License
 
@@ -50,3 +88,5 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 ## Laravel Package Boilerplate
 
 This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).
+
+

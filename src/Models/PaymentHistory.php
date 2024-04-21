@@ -4,6 +4,7 @@ namespace Pratiksh\Payable\Models;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PaymentHistory extends Model
 {
@@ -30,17 +31,17 @@ class PaymentHistory extends Model
     }
 
     // Relationships
-    public function payment()
+    public function payment() : BelongsTo
     {
         return $this->belongsTo(Payment::class);
     }
 
-    public function paymentBy()
+    public function paymentBy() : BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function verifiedBy()
+    public function verifiedBy() : BelongsTo
     {
         return $this->belongsTo(User::class, 'verified_by');
     }

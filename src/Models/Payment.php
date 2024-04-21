@@ -3,6 +3,7 @@
 namespace Pratiksh\Payable\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Str;
@@ -51,7 +52,7 @@ class Payment extends Model
         return $this->belongsTo(Fiscal::class);
     }
 
-    public function histories()
+    public function histories() : HasMany
     {
         return $this->hasMany(PaymentHistory::class);
     }

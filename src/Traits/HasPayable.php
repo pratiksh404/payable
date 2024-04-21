@@ -2,6 +2,7 @@
 
 namespace Pratiksh\Payable\Traits;
 
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Auth;
 use Pratiksh\Payable\Models\Payment;
 use Pratiksh\Payable\Models\PaymentHistory;
@@ -17,7 +18,7 @@ trait HasPayable
      *             specifies the related model class, and `'paymentable'` is the morph name used for the
      *             relationship.
      */
-    public function payments()
+    public function payments() : MorphMany
     {
         return $this->morphMany(Payment::class, 'paymentable');
     }

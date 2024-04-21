@@ -3,6 +3,7 @@
 namespace Pratiksh\Payable\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Fiscal extends Model
 {
@@ -18,7 +19,7 @@ class Fiscal extends Model
     }
 
     // Relationships
-    public function payments()
+    public function payments() : HasMany
     {
         return $this->hasMany(Payment::class);
     }

@@ -9,7 +9,7 @@ class CurrentYear implements CurrentYearInterface
 {
     /**
      * Returns current year.
-     * You may return your home country native year
+     * You may return your home country native year.
      */
     public function __invoke(): int
     {

@@ -34,7 +34,7 @@ class PayableServiceProvider extends ServiceProvider
     }
 
     /**
-     * Publish Resources
+     * Publish Resources.
      */
     private function publishResources()
     {

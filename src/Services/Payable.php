@@ -8,7 +8,7 @@ use Pratiksh\Payable\Models\Fiscal;
 class Payable
 {
     /**
-     * Return current active fiscal
+     * Return current active fiscal.
      */
     public function fiscal(): Fiscal
     {
@@ -59,7 +59,7 @@ class Payable
     }
 
     /**
-     * Return native year
+     * Return native year.
      */
     public function currentYear(): int
     {
@@ -78,7 +78,7 @@ class Payable
     }
 
     /**
-     * Check if given native year is leap year or not
+     * Check if given native year is leap year or not.
      */
     public function isLeapYear($year = null): bool
     {
@@ -97,7 +97,7 @@ class Payable
     }
 
     /**
-     * Returns receipt no structure
+     * Returns receipt no structure.
      */
     public function receipt_no($year = null): string
     {

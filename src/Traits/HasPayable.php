@@ -18,7 +18,7 @@ trait HasPayable
      *             specifies the related model class, and `'paymentable'` is the morph name used for the
      *             relationship.
      */
-    public function payments() : MorphMany
+    public function payments(): MorphMany
     {
         return $this->morphMany(Payment::class, 'paymentable');
     }

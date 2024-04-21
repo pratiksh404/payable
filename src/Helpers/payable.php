@@ -5,7 +5,7 @@ use Pratiksh\Payable\Facades\Payable;
 use Pratiksh\Payable\Models\Fiscal;
 
 /**
- * Return start and end date of fiscal year
+ * Return start and end date of fiscal year.
  *
  * @return array
  */
@@ -28,7 +28,7 @@ if (! function_exists('fiscal_duration')) {
 }
 
 /**
- * Return current fiscal model
+ * Return current fiscal model.
  *
  * @return Fiscal
  */

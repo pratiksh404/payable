@@ -31,17 +31,17 @@ class PaymentHistory extends Model
     }
 
     // Relationships
-    public function payment() : BelongsTo
+    public function payment(): BelongsTo
     {
         return $this->belongsTo(Payment::class);
     }
 
-    public function paymentBy() : BelongsTo
+    public function paymentBy(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function verifiedBy() : BelongsTo
+    public function verifiedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'verified_by');
     }

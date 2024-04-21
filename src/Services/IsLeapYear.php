@@ -9,7 +9,7 @@ class IsLeapYear implements IsLeapYearInterface
 {
     /**
      * Leap year logic
-     * Determine how leap is year is identified
+     * Determine how leap is year is identified.
      */
     public function __invoke($year = null): bool
     {

@@ -39,7 +39,7 @@ class Payment extends Model
     }
 
     // Eager Load
-    protected $with = ['histories','histories.paymentBy','histories.verifiedBy','fiscal'];
+    protected $with = ['histories', 'histories.paymentBy', 'histories.verifiedBy', 'fiscal'];
 
     // Relationships
     public function paymentable(): MorphTo
@@ -52,16 +52,18 @@ class Payment extends Model
         return $this->belongsTo(Fiscal::class);
     }
 
-    public function histories() : HasMany
+    public function histories(): HasMany
     {
         return $this->hasMany(PaymentHistory::class);
     }
 
-    public function payer(){
+    public function payer()
+    {
         return $this->histories()->latest()->first()->paymentBy;
     }
 
-    public function verifier(){
+    public function verifier()
+    {
         return $this->histories()->latest()->first()->verifiedBy;
     }
 
@@ -69,18 +71,20 @@ class Payment extends Model
     {
         $history = $history ?? $this->histories()->latest()->first();
         $history->update([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
+
         return $this;
     }
 
-    public function verifiedBy(User $user,?PaymentHistory $history = null)
+    public function verifiedBy(User $user, ?PaymentHistory $history = null)
     {
         $history = $history ?? $this->histories()->latest()->first();
-         $history->update([
+        $history->update([
             'verified' => true,
-            'verified_by' => $user->id
+            'verified_by' => $user->id,
         ]);
+
         return $this;
     }
 }

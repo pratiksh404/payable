@@ -19,7 +19,7 @@ class Fiscal extends Model
     }
 
     // Relationships
-    public function payments() : HasMany
+    public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
     }

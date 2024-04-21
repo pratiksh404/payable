@@ -9,7 +9,7 @@ use Pratiksh\Payable\Models\Payment;
 class ReceiptNo implements ReceiptNoInterface
 {
     /**
-     * Returns receipt no structure
+     * Returns receipt no structure.
      */
     public function __invoke($year = null): string
     {

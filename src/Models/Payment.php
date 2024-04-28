@@ -11,7 +11,7 @@ use Pratiksh\Payable\Facades\Payable;
 
 class Payment extends Model
 {
-    protected $fillable = ['amount', 'data'];
+    protected $guarded = [];
 
     protected $keyType = 'string';
 
@@ -55,6 +55,10 @@ class Payment extends Model
     public function histories(): HasMany
     {
         return $this->hasMany(PaymentHistory::class);
+    }
+
+    public function transaction(){
+        return $this->belongsTo(Transaction::class);
     }
 
     public function payer()

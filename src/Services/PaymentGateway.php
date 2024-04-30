@@ -30,8 +30,6 @@ class PaymentGateway
 
     public $return_url;
 
-    public $failure_url;
-
     public $amount;
 
     public function __construct(PaymentGatewayInterface $gateway, $model)
@@ -44,6 +42,11 @@ class PaymentGateway
         }
     }
 
+    /**
+     * Payment Initiate
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function pay(float $amount, $return_url, $product_id = null, $product_name = null)
     {
         $this->amount = $amount;
@@ -59,6 +62,9 @@ class PaymentGateway
         );
     }
 
+    /**
+     * Returns payment with gateway transaction and history
+     */
     public function process($transaction_id, ?array $arguments = null): Payment
     {
         $request = $arguments;
@@ -101,7 +107,10 @@ class PaymentGateway
         }
     }
 
-    private function getGatewayName(PaymentGatewayInterface $gateway)
+    /**
+     * Payment Gateway Service Class Name
+     */
+    private function getGatewayName(PaymentGatewayInterface $gateway): string
     {
         $name = get_class($gateway);
         $exploded_name = explode('\\', $name);

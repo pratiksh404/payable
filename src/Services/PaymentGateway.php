@@ -43,7 +43,7 @@ class PaymentGateway
     }
 
     /**
-     * Payment Initiate
+     * Payment Initiate.
      *
      * @return \Illuminate\Http\Response
      */
@@ -63,7 +63,7 @@ class PaymentGateway
     }
 
     /**
-     * Returns payment with gateway transaction and history
+     * Returns payment with gateway transaction and history.
      */
     public function process($transaction_id, ?array $arguments = null): Payment
     {
@@ -108,7 +108,7 @@ class PaymentGateway
     }
 
     /**
-     * Payment Gateway Service Class Name
+     * Payment Gateway Service Class Name.
      */
     private function getGatewayName(PaymentGatewayInterface $gateway): string
     {

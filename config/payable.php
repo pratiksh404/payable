@@ -37,6 +37,6 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'user_table' => 'users',
+    'user_model' => App\Models\User::class,
     'user_table_primary_key' => 'id',
 ];

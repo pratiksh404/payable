@@ -3,10 +3,23 @@
 namespace Pratiksh\Payable\Services;
 
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Pratiksh\Payable\Models\Fiscal;
+use Pratiksh\Payable\Models\Payment;
 
 class Payable
 {
+    /**
+     * Return User Model
+     */
+    public function user()
+    {
+        $user_model_name = config('payable.user_model', 'App\Models\User');
+        $user_model = new $user_model_name;
+
+        return $user_model;
+    }
+
     /**
      * Return current active fiscal.
      */
@@ -114,5 +127,120 @@ class Payable
         $receipt_no = new ReceiptNo;
 
         return $receipt_no($year);
+    }
+
+    /*
+       |--------------------------------------------------------------------------
+       | Statistics
+       |--------------------------------------------------------------------------
+       |
+       */
+    public function credit(?Carbon $date = null): float
+    {
+        $query = Payment::credit();
+        $query = ! is_null($date)
+            ? $query->whereDate('created_at', $date)
+            : $query;
+
+        return $query->sum('amount');
+    }
+
+    public function debit(?Carbon $date = null): float
+    {
+        $query = Payment::debit();
+        $query = ! is_null($date)
+            ? $query->whereDate('created_at', $date)
+            : $query;
+
+        return $query->sum('amount');
+    }
+
+    public function balance(?Carbon $date = null): float
+    {
+        $credit = $this->credit($date);
+        $debit = $this->debit($date);
+
+        return $credit - $debit;
+    }
+
+    public function auditByLastDays($limit = 7, $date_format = 'Y-m-d'): array
+    {
+        $data = [];
+        $start = Carbon::now()->subDays($limit);
+        $end = Carbon::now();
+        $period = CarbonPeriod::create($start, $end);
+        foreach ($period as $date) {
+            $credit = $this->credit($date);
+            $debit = $this->credit($date);
+            $balance = $credit - $debit;
+            $data[$date->format($date_format)] = [
+                'credit' => $credit,
+                'debit' => $debit,
+                'balance' => $balance,
+            ];
+        }
+
+        return $data;
+    }
+
+    public function auditByLastMonths($limit = 12, $date_format = 'Y-m'): array
+    {
+        $data = [];
+        $date = Carbon::now()->subMonths($limit);
+        $i = 1;
+        while ($i <= $limit) {
+            $query = Payment::whereYear('created_at', $date->year)->whereMonth('created_at', $date->month);
+            $credit = with(clone $query)->credit()->sum('amount');
+            $debit = with(clone $query)->debit()->sum('amount');
+            $balance = $credit - $debit;
+            $data[$date->format($date_format)] = [
+                'credit' => $credit,
+                'debit' => $debit,
+                'balance' => $balance,
+            ];
+            $date = $date->copy()->addMonth();
+            $i++;
+        }
+
+        return $data;
+    }
+
+    public function auditByFiscal(?Fiscal $fiscal): array
+    {
+        $fiscal = $fiscal ?? $this->fiscal();
+        $query = Payment::where('fiscal_id', $fiscal->id);
+        $credit = with(clone $query)->credit()->sum('amount');
+        $debit = with(clone $query)->debit()->sum('amount');
+        $balance = $credit - $debit;
+
+        return [
+            'credit' => $credit,
+            'debit' => $debit,
+            'balance' => $balance,
+        ];
+    }
+
+    public function auditByFiscalMonth(?Fiscal $fiscal = null): array
+    {
+        $data = [];
+        $fiscal = $fiscal ?? $this->fiscal();
+        $query = Payment::where('fiscal_id', $fiscal->id);
+        $start = Carbon::create($fiscal->start_date);
+        $end = Carbon::create($fiscal->end_date);
+        $date = $start;
+        while (! ($date->format('Y-m') === $end->format('Y-m'))) {
+            $fiscal_month = with(clone $query)->whereYear('created_at', $date->year)->whereMonth('created_at', $date->month);
+            $credit = with(clone $fiscal_month)->credit()->sum('amount');
+            $debit = with(clone $fiscal_month)->debit()->sum('amount');
+            $balance = $credit - $debit;
+            $data[$date->format('Y-m')] = [
+                'credit' => $credit,
+                'debit' => $debit,
+                'balance' => $balance,
+            ];
+            $date = $date->copy()->addMonth();
+        }
+
+        return $data;
     }
 }

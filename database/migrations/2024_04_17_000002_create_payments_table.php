@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Pratiksh\Payable\Models\Payment;
 
 return new class extends Migration
 {
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->double('amount')->default(0);
             $table->json('data')->nullable();
             $table->unsignedBigInteger('transaction_id')->nullable();
+            $table->boolean('type')->default(Payment::CREDIT);
 
             // Polymorphism
             $table->unsignedBigInteger('paymentable_id');

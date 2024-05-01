@@ -1,0 +1,73 @@
+<?php
+
+namespace {{NAMESPACE}};
+
+use Exception;
+use Illuminate\Support\Facades\Http;
+use Pratiksh\Payable\Contracts\PaymentGatewayInterface;
+
+class {{CLASS_NAME}}  implements PaymentGatewayInterface
+{
+    /**
+    *
+    * Function to perform some logic before payment process
+    *
+    */
+    public function pay(float $amount, $return_url)
+    {
+        // Some Actions
+        return $this->initiate($amount, $return_url);
+    }
+
+    /**
+    *
+    * Initiate Payment Gateway Transaction
+    * @param float amount : Amount requested for payment transaction
+    * @param return_url : Redirect url after payment transaction
+    * @param array arguments : Additional dataset
+    *
+    */
+    public function initiate(float $amount, $return_url, ?array $arguments = null)
+    {
+        // Some Actions
+    }
+
+    /**
+     *
+     * Success status of payment transaction 
+     * @param array inquiry : Payment transaction response
+     * @param array arguments : Additional dataset
+     * @return bool 
+     *
+     */
+    public function isSuccess(array $inquiry, ?array $arguments = null): bool
+    {
+        return true;
+    }
+
+    /**
+     *
+     * Requested amount to be registered
+     * @param array inquiry : Payment transaction response
+     * @param array arguments : Additional dataset
+     * @return float 
+     *
+     */
+    public function requestedAmount(array $inquiry, ?array $arguments = null): float
+    {
+        return 0;
+    }
+
+    /**
+     *
+     * Payment status lookup request
+     * @param mixed transaction_id : Code provided by payment gateway vendor to uniquely identify payment transaction 
+     * @param array arguments : Additional dataset
+     * @return array 
+     *
+     */
+     public function inquiry($transaction_id, ?array $arguments = null): array
+     {
+        return [];
+     }
+}

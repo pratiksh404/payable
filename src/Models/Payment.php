@@ -11,6 +11,10 @@ use Pratiksh\Payable\Facades\Payable;
 
 class Payment extends Model
 {
+    const CREDIT = 1;
+
+    const DEBIT = 0;
+
     protected $guarded = [];
 
     protected $keyType = 'string';
@@ -40,6 +44,24 @@ class Payment extends Model
 
     // Eager Load
     protected $with = ['histories', 'histories.paymentBy', 'histories.verifiedBy', 'fiscal'];
+
+    // Appends
+    protected $appends = ['payer_name', 'payer_email'];
+
+    // Accessor
+    public function getPayerNameAttribute()
+    {
+        $history = $this->histories()->latest()->first();
+
+        return $history->paymentBy->name ?? $history->data['payer']['name'] ?? null;
+    }
+
+    public function getPayerEmailAttribute()
+    {
+        $history = $this->histories()->latest()->first();
+
+        return $history->paymentBy->email ?? $history->data['payer']['email'] ?? null;
+    }
 
     // Relationships
     public function paymentable(): MorphTo
@@ -82,6 +104,29 @@ class Payment extends Model
         return $this;
     }
 
+    public function byName(string $name)
+    {
+        return $this->byNameAndEmail($name);
+    }
+
+    public function byNameAndEmail(string $name, ?string $email = null)
+    {
+        $history = $history ?? $this->histories()->latest()->first();
+
+        $data = $history->data;
+
+        $data['payer'] = [
+            'name' => $name,
+            'email' => $email,
+        ];
+
+        $history->update([
+            'data' => $data,
+        ]);
+
+        return $this;
+    }
+
     public function verifiedBy(User $user, ?PaymentHistory $history = null)
     {
         $history = $history ?? $this->histories()->latest()->first();
@@ -91,5 +136,25 @@ class Payment extends Model
         ]);
 
         return $this;
+    }
+
+    public function dr()
+    {
+        $this->update([
+            'type' => self::DEBIT,
+        ]);
+
+        return $this;
+    }
+
+    // Scopes
+    public function scopeCredit($query)
+    {
+        return $query->where('type', self::CREDIT);
+    }
+
+    public function scopeDebit($query)
+    {
+        return $query->where('type', self::DEBIT);
     }
 }

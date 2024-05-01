@@ -3,6 +3,7 @@
 namespace Pratiksh\Payable\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Pratiksh\Payable\Console\Commands\MakePaymentGatewayCommand;
 use Pratiksh\Payable\Services\Payable;
 
 class PayableServiceProvider extends ServiceProvider
@@ -24,6 +25,8 @@ class PayableServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // Register Package Commands
+        $this->registerCommands();
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../../config/payable.php', 'payable');
 
@@ -46,5 +49,17 @@ class PayableServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../../database/migrations' => database_path('migrations'),
         ], 'payable-migrations');
+    }
+
+    /**
+     * Register Package Command.
+     *
+     * @return void
+     */
+    protected function registerCommands()
+    {
+        $this->commands([
+            MakePaymentGatewayCommand::class,
+        ]);
     }
 }

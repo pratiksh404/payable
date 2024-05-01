@@ -10,7 +10,7 @@ use Pratiksh\Payable\Models\Payment;
 class Payable
 {
     /**
-     * Return User Model
+     * Return User Model.
      */
     public function user()
     {

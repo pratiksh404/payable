@@ -10,19 +10,19 @@ use Pratiksh\Payable\Models\Transaction;
 class PaymentGateway
 {
     /**
-     * Payment Gateway Service
+     * Payment Gateway Service.
      */
     public $gateway;
 
     public $gateway_name;
 
     /**
-     * HasPayable Model
+     * HasPayable Model.
      */
     public $model;
 
     /**
-     * Request Payloads
+     * Request Payloads.
      */
     public $product_id;
 
@@ -61,7 +61,7 @@ class PaymentGateway
 
     public function process($transaction_id, ?array $arguments = null): Payment
     {
-        if (! (Transaction::has('payment')->where('code', $transaction_id)->where('success', true)->exists())) {
+        if (! Transaction::has('payment')->where('code', $transaction_id)->where('success', true)->exists()) {
             $request = $arguments;
             $inquiry = $this->gateway->inquiry($transaction_id, $arguments);
 

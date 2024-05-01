@@ -38,7 +38,7 @@ class MakePaymentGatewayCommand extends GeneratorCommand
         $exploded_name = explode('\\', $name);
         $namespace = $this->laravel->getNamespace().'PaymentGateway'.(count($exploded_name) > 1 ? '\\' : '').trim(implode('\\', array_slice($exploded_name, 0, -1)), '\\');
 
-        $directory = app_path('PaymentGateway/'.(str_replace('\\', '/', trim(implode('\\', array_slice($exploded_name, 0, -1)), '\\'))));
+        $directory = app_path('PaymentGateway/'.str_replace('\\', '/', trim(implode('\\', array_slice($exploded_name, 0, -1)), '\\')));
         $fileName = $className.'.php';
         $filePath = $directory.'/'.$fileName;
 

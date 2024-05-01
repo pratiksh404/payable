@@ -3,32 +3,25 @@
 namespace Pratiksh\Payable\Services;
 
 use Exception;
+use Pratiksh\Payable\Contracts\PaymentGatewayInterface;
 use Pratiksh\Payable\Models\Payment;
 use Pratiksh\Payable\Models\Transaction;
-use Pratiksh\Payable\Contracts\PaymentGatewayInterface;
 
 class PaymentGateway
 {
     /**
-     *
-     * Payment Gateway Service
-     *
+     * Payment Gateway Service.
      */
     public $gateway;
     public $gateway_name;
 
     /**
-     *
-     * HasPayable Model
-     *
-     *
+     * HasPayable Model.
      */
     public $model;
 
     /**
-     *
-     * Request Payloads
-     *
+     * Request Payloads.
      */
     public $product_id;
     public $product_name;
@@ -36,24 +29,23 @@ class PaymentGateway
     public $failure_url;
     public $amount;
 
-
-
     public function __construct(PaymentGatewayInterface $gateway, $model)
     {
         $this->gateway = $gateway;
         $this->gateway_name = $this->getGatewayName($gateway);
         $this->model = $model;
-        if (!method_exists($model, 'payments')) {
-            throw new Exception(basename($model) . ' does not have payments method.');
+        if (! method_exists($model, 'payments')) {
+            throw new Exception(basename($model).' does not have payments method.');
         }
     }
 
-    public function pay(float $amount,$return_url, $product_id = null, $product_name = null)
+    public function pay(float $amount, $return_url, $product_id = null, $product_name = null)
     {
         $this->amount = $amount;
         $this->return_url = $return_url;
         $this->product_id = $product_id ?? $this->model->id ?? throw new Exception('product_id not provided.');
         $this->product_name = $product_name ?? $this->model->name ?? throw new Exception('product_name not provided.');
+
         return $this->gateway->pay(
             $this->amount,
             $this->return_url,
@@ -64,15 +56,15 @@ class PaymentGateway
 
     public function process($transaction_id, ?array $arguments = null): Payment
     {
-        if (!(Transaction::has('payment')->where('code',$transaction_id)->where('success',true)->exists())) {
+        if (! Transaction::has('payment')->where('code', $transaction_id)->where('success', true)->exists()) {
             $request = $arguments;
             $inquiry = $this->gateway->inquiry($transaction_id, $arguments);
 
             $data = [
                 'responses' => [
                     'request' => $request,
-                    'inquiry' => $inquiry
-                ]
+                    'inquiry' => $inquiry,
+                ],
             ];
 
             $success = $this->gateway->isSuccess($inquiry);
@@ -83,32 +75,34 @@ class PaymentGateway
                 'payment_method' => $this->gateway_name,
                 'amount' => $requested_amount,
                 'success' => $success,
-                'data' => $data
+                'data' => $data,
             ]);
 
             if ($success) {
                 $payment = $this->model->pay($requested_amount);
                 $payment->update([
-                    'transaction_id' => $transaction->id
+                    'transaction_id' => $transaction->id,
                 ]);
                 $payment->histories()->latest()->first()->update([
-                    'verified' =>  true,
+                    'verified' => true,
                 ]);
+
                 return $payment;
             } else {
                 throw new Exception('Payment not register. Payment gateway response states payment is not complete.');
             }
         } else {
             $transaction = Transaction::has('payment')->where('code', $transaction_id)->where('success', true)->first();
+
             return Payment::where('transaction_id', $transaction->id)->first();
         }
     }
 
-    private  function getGatewayName(PaymentGatewayInterface $gateway)
+    private function getGatewayName(PaymentGatewayInterface $gateway)
     {
         $name = get_class($gateway);
         $exploded_name = explode('\\', $name);
-         return array_pop($exploded_name);
-    }
 
+        return array_pop($exploded_name);
+    }
 }

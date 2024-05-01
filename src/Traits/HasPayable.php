@@ -2,10 +2,11 @@
 
 namespace Pratiksh\Payable\Traits;
 
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Auth;
 use Pratiksh\Payable\Models\Payment;
 use Pratiksh\Payable\Models\PaymentHistory;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Pratiksh\Payable\Contracts\PaymentGatewayInterface;
 
 trait HasPayable
 {
@@ -64,7 +65,7 @@ trait HasPayable
             'amount' => $amount,
         ]);
 
-        $this->paymentHistory($payment, PaymentHistory::UPDATED, $old_amount);
+      $this->paymentHistory($payment, PaymentHistory::UPDATED, $old_amount);
 
         return $payment;
     }

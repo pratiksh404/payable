@@ -57,7 +57,8 @@ class Payment extends Model
         return $this->hasMany(PaymentHistory::class);
     }
 
-    public function transaction(){
+    public function transaction()
+    {
         return $this->belongsTo(Transaction::class);
     }
 

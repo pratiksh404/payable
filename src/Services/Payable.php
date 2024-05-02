@@ -35,7 +35,7 @@ class Payable
                 ->whereDate('end_date', '>=', $today)
                 ->first();
             // If found returns the fiscal
-            if (! is_null($fiscal)) {
+            if (!is_null($fiscal)) {
                 return $fiscal;
             } else {
                 // Check if today falls under fiscal duration
@@ -130,31 +130,34 @@ class Payable
     }
 
     /*
-       |--------------------------------------------------------------------------
-       | Statistics
-       |--------------------------------------------------------------------------
-       |
-       */
+|--------------------------------------------------------------------------
+| Statistics
+|--------------------------------------------------------------------------
+|
+*/
+    // Returns credited payment total
     public function credit(?Carbon $date = null): float
     {
         $query = Payment::credit();
-        $query = ! is_null($date)
+        $query = !is_null($date)
             ? $query->whereDate('created_at', $date)
             : $query;
 
         return $query->sum('amount');
     }
 
+    // Returns debited payment total
     public function debit(?Carbon $date = null): float
     {
         $query = Payment::debit();
-        $query = ! is_null($date)
+        $query = !is_null($date)
             ? $query->whereDate('created_at', $date)
             : $query;
 
         return $query->sum('amount');
     }
 
+    // Returns total balance
     public function balance(?Carbon $date = null): float
     {
         $credit = $this->credit($date);
@@ -163,6 +166,10 @@ class Payable
         return $credit - $debit;
     }
 
+    /* The `auditByLastDays` function in the `Payable` class is used to generate an audit report for the
+   last specified number of days. It takes two optional parameters: `limit` which specifies the
+   number of days to go back for the audit report (default is 7 days), and `date_format` which
+   specifies the format in which the dates will be displayed in the report (default is 'Y-m-d'). */
     public function auditByLastDays($limit = 7, $date_format = 'Y-m-d'): array
     {
         $data = [];
@@ -183,7 +190,21 @@ class Payable
         return $data;
     }
 
-    public function auditByLastMonths($limit = 12, $date_format = 'Y-m'): array
+    /**
+     * The function `auditByLastMonths` retrieves payment data for the last specified number of months
+     * and calculates credit, debit, and balance amounts for each month.
+     * 
+     * @param int limit : The `limit` parameter in the `auditByLastMonths` function determines the number of
+     * previous months to include in the audit. By default, it is set to 12, meaning it will audit the
+     * last 12 months of payment data. 
+     * @param string date_format : The `date_format` parameter in the `auditByLastMonths` function is used to
+     * specify the format in which the date will be displayed in the resulting array. It is used with
+     * the `format` method of the Carbon date object.
+     * 
+     * @return array An array containing audit data for the last 12 months, with each month's credit,
+     * debit, and balance.
+     */
+    public function auditByLastMonths(int $limit = 12, string $date_format = 'Y-m'): array
     {
         $data = [];
         $date = Carbon::now()->subMonths($limit);
@@ -205,6 +226,21 @@ class Payable
         return $data;
     }
 
+    /**
+     * This PHP function audits payments based on a fiscal object, calculating credit, debit, and balance
+     * amounts.
+     * 
+     * @param fiscal The `auditByFiscal` function takes a `Fiscal` object as a parameter. If no `Fiscal`
+     * object is provided, it uses the `fiscal()` method from the current object.
+     * 
+     * @return array An array is being returned with the following keys and values:
+     * - 'credit': the sum of the credit amounts for payments associated with the provided Fiscal object
+     * or the default Fiscal object
+     * - 'debit': the sum of the debit amounts for payments associated with the provided Fiscal object or
+     * the default Fiscal object
+     * - 'balance': the difference between the credit and debit sums, representing the overall balance for
+     * the specified
+     */
     public function auditByFiscal(?Fiscal $fiscal): array
     {
         $fiscal = $fiscal ?? $this->fiscal();
@@ -220,6 +256,18 @@ class Payable
         ];
     }
 
+    /**
+     * The function `auditByFiscalMonth` retrieves payment data for a specific fiscal month and calculates
+     * the credit, debit, and balance amounts for each month within the fiscal period.
+     * 
+     * @param fiscal The `auditByFiscalMonth` function takes an optional parameter `fiscal` of type
+     * `Fiscal`. If no value is provided for `fiscal`, it defaults to the result of calling the
+     * `fiscal()` method on the current object.
+     * 
+     * @return array An array containing audit data for each fiscal month within the specified fiscal
+     * period. The array includes credit, debit, and balance information for each month in the fiscal
+     * period.
+     */
     public function auditByFiscalMonth(?Fiscal $fiscal = null): array
     {
         $data = [];
@@ -228,7 +276,7 @@ class Payable
         $start = Carbon::create($fiscal->start_date);
         $end = Carbon::create($fiscal->end_date);
         $date = $start;
-        while (! ($date->format('Y-m') === $end->format('Y-m'))) {
+        while (!($date->format('Y-m') === $end->format('Y-m'))) {
             $fiscal_month = with(clone $query)->whereYear('created_at', $date->year)->whereMonth('created_at', $date->month);
             $credit = with(clone $fiscal_month)->credit()->sum('amount');
             $debit = with(clone $fiscal_month)->debit()->sum('amount');

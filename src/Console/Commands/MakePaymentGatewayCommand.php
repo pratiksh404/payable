@@ -32,12 +32,12 @@ class MakePaymentGatewayCommand extends GeneratorCommand
     }
 
     /**
-     * The function creates a new payment gateway class file in a specified namespace directory
-     * 
+     * The function creates a new payment gateway class file in a specified namespace directory.
+     *
      * @return The `handle()` function is returning a message indicating whether the payment gateway
-     * class was successfully created or if it already exists in the specified namespace. If the class
-     * already exists, an error message is displayed. If the class is successfully created, an info
-     * message is displayed with the path where the class was created.
+     *             class was successfully created or if it already exists in the specified namespace. If the class
+     *             already exists, an error message is displayed. If the class is successfully created, an info
+     *             message is displayed with the path where the class was created.
      */
     public function handle()
     {

@@ -4,6 +4,8 @@ namespace Pratiksh\Payable\Contracts;
 
 interface PaymentGatewayInterface
 {
+    public function pay(float $amount, $return_url, $purchase_order_id, $purchase_order_name);
+    
     public function initiate(float $amount, $return_url, ?array $arguments = null);
 
     public function inquiry($transaction_id, ?array $arguments = null): array;
